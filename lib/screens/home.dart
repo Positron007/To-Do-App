@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/constants/colors.dart';
+import '../constants/colors.dart';
+import '../model/todo.dart';
+import '../widgets/todo-list.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -9,6 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final todoList = ToDo.todosList();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,33 +21,30 @@ class _HomeState extends State<Home> {
 
       body: Container(
 
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
           children: [
-            const SizedBox(height: 20.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(22),
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
+            searchBox(),
+            Expanded(
+              child: ListView(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 50,
+                      bottom: 20
+                    ),
+                    child: const Text(
+                      'All To-Dos',
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
 
-                  hintStyle: TextStyle(color: tdGrey),
-                  contentPadding: EdgeInsets.all(0),
-                  prefixIcon: Align(
-                      widthFactor: 1,
-                      heightFactor: 1,
-                      child: Icon(Icons.search, color: Colors.black, size: 20),
-                  ),
-                  prefixIconConstraints: BoxConstraints(
-                    maxHeight: 20,
-                    maxWidth: 25
-                  ),
-                  border: InputBorder.none,
-                  hintText: 'Search',
-                ),
+                  for(ToDo todo in todoList )
+                    ToDoItem(todo: todo,),
+                ],
               ),
             )
           ],
@@ -74,6 +75,34 @@ class _HomeState extends State<Home> {
          //   style: TextStyle(color: tdBlack),
          // ),
        ],
+     ),
+   );
+ }
+
+ Widget searchBox() {
+   return Container(
+     padding: const EdgeInsets.symmetric(horizontal: 15),
+     decoration: BoxDecoration(
+       color: Colors.white,
+       borderRadius: BorderRadius.circular(22),
+     ),
+     child: const TextField(
+       decoration: InputDecoration(
+
+         hintStyle: TextStyle(color: tdGrey),
+         contentPadding: EdgeInsets.all(0),
+         prefixIcon: Align(
+           widthFactor: 1,
+           heightFactor: 1,
+           child: Icon(Icons.search, color: Colors.black, size: 20),
+         ),
+         prefixIconConstraints: BoxConstraints(
+             maxHeight: 20,
+             maxWidth: 25
+         ),
+         border: InputBorder.none,
+         hintText: 'Search',
+       ),
      ),
    );
  }
