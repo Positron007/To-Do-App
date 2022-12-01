@@ -40,6 +40,7 @@ class ToDoItem extends StatelessWidget {
           ),
           child: IconButton(
             color: Colors.white,
+            padding: EdgeInsets.all(0),
             iconSize: 18,
             icon: const Icon(Icons.delete),
             onPressed: () {

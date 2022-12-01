@@ -18,7 +18,10 @@ static List<ToDo> todosList(){
     ToDo(id: '03', todoText: 'Check Mails'),
     ToDo(id: '04', todoText: 'Team Meetings'),
     ToDo(id: '05', todoText: 'Work on the app'),
-    ToDo(id: '06', todoText: 'Dinner')
+    ToDo(id: '06', todoText: 'Work on the app'),
+    ToDo(id: '07', todoText: 'Work on the app'),
+    ToDo(id: '08', todoText: 'Work on the app'),
+    ToDo(id: '09', todoText: 'Dinner')
   ];
 }
 }
