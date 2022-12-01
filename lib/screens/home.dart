@@ -58,6 +58,8 @@ class _HomeState extends State<Home> {
                       for (ToDo todo in todoList)
                         ToDoItem(
                           todo: todo,
+                          onToDoChanged: _handleToDoChange,
+                          onDeleteItem: () {},
                         ),
                     ],
                   ),
@@ -72,46 +74,43 @@ class _HomeState extends State<Home> {
                 children: [
                   Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(
-                            bottom: 20,
-                            right: 20,
-                            left: 20
+                    margin: EdgeInsets.only(bottom: 20, right: 20, left: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset.zero,
+                          blurRadius: 10,
+                          spreadRadius: 0,
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 5
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: const [BoxShadow(
-                            color: Colors.white,
-                            offset: Offset.zero,
-                            blurRadius: 10,
-                            spreadRadius: 0,
-                          ),],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Add new todo item',
-                            border: InputBorder.none
-                          ),
-                        ),
-                      )
-                  ),
+                      ],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          hintText: 'Add new todo item',
+                          border: InputBorder.none),
+                    ),
+                  )),
                   Container(
-                    margin: EdgeInsets.only(
-                      bottom: 20, right: 20,
+                    margin: const EdgeInsets.only(
+                      bottom: 20,
+                      right: 20,
                     ),
                     child: ElevatedButton(
-                      child: Text('+', style: TextStyle(fontSize: 40),),
-                      onPressed: (){},
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: tdBlue,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(60, 60),
-                        elevation: 10.00,
-                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0)
+                          backgroundColor: tdBlue,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(60, 60),
+                          elevation: 10.00,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 0)),
+                      child: const Text(
+                        '+',
+                        style: TextStyle(fontSize: 40),
                       ),
                     ),
                   )
@@ -119,10 +118,15 @@ class _HomeState extends State<Home> {
               ),
             ),
           )
-
         ],
       ),
     );
+  }
+
+  void _handleToDoChange(ToDo todo) {
+    setState(() {
+      todo.isDone = !todo.isDone;
+    });
   }
 
   AppBar _buildAppBar() {
