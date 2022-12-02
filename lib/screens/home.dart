@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../model/todo.dart';
 import '../widgets/todo-list.dart';
+import 'CustomDrawer.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,10 +14,22 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final todoList = ToDo.todosList();
   final _todoController = TextEditingController();
+  List<ToDo> _foundToDo = [];
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+
+  @override
+  void initState() {
+    _foundToDo = todoList;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
+      drawerEnableOpenDragGesture: false,
+      drawer: const CustomDrawer(),
+
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       // floatingActionButton: FloatingActionButton(
       //   backgroundColor: Colors.blue,
@@ -35,7 +48,7 @@ class _HomeState extends State<Home> {
       //   BottomNavigationBarItem(icon: Icon(Icons.favorite_border),label: "Home")
       // ]),
       backgroundColor: tdBGColor,
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(context),
       body: Stack(
         children: [
           Container(
@@ -56,7 +69,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      for (ToDo todo in todoList)
+                      for (ToDo todo in _foundToDo)
                         ToDoItem(
                           todo: todo,
                           onToDoChanged: _handleToDoChange,
@@ -75,8 +88,8 @@ class _HomeState extends State<Home> {
                 children: [
                   Expanded(
                       child: Container(
-                    margin: EdgeInsets.only(bottom: 20, right: 20, left: 20),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    margin: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: const [
@@ -91,7 +104,7 @@ class _HomeState extends State<Home> {
                     ),
                     child: TextField(
                       controller: _todoController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           hintText: 'Add new todo item',
                           border: InputBorder.none),
                     ),
@@ -148,15 +161,40 @@ class _HomeState extends State<Home> {
     _todoController.clear();
   }
 
-  AppBar _buildAppBar() {
+  void _runFilter(String enteredKeyword) {
+    List<ToDo> results = [];
+    if (enteredKeyword.isEmpty) {
+      results = todoList;
+    } else {
+      results = todoList
+          .where((item) => item.todoText!
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    setState(() {
+      _foundToDo = results;
+    });
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: tdBGColor,
       elevation: 0,
+      leading: IconButton(
+        onPressed: () {
+          _key.currentState!.openDrawer();
+        },
+        icon: const Icon(
+          Icons.menu,
+          color: Colors.black,
+        ),
+      ),
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Icon(Icons.menu, color: tdBlack, size: 30),
-          Container(
+          SizedBox(
             height: 40,
             width: 40,
             child: ClipRRect(
@@ -176,6 +214,7 @@ class _HomeState extends State<Home> {
         borderRadius: BorderRadius.circular(22),
       ),
       child: const TextField(
+        // onChanged: (String value) => _runFilter(value),
         decoration: InputDecoration(
           hintStyle: TextStyle(color: tdGrey),
           contentPadding: EdgeInsets.all(0),
